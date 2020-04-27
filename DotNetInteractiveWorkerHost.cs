@@ -51,14 +51,14 @@ namespace WebAppHostingDotNetInteractive {
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                await Task.Delay(3000);
+
                 logger.LogDebug($"Worker with host is running. DotNetInteractiveProcess.HasExited?: {DotNetInteractiveProcess.HasExited} sending sample to myself.");
 
                 // {"token":"1","commandType":"SubmitCode","command":{"code": "var a = 1 + 13;"}}
                 await DotNetInteractiveProcess.StandardInput.WriteLineAsync(
                     "{\"token\":\"1\",\"commandType\":\"SubmitCode\",\"command\":{\"code\": \"var a = 1 + 13;\"}}"
                 );
-
-                await Task.Delay(3000);
             }
         }
     }
