@@ -18,23 +18,25 @@ namespace WebAppHostingDotNetInteractive {
 
             base.StartAsync(cancellationToken);
 
-            var startInfo = new ProcessStartInfo ("dotnet", "interactive stdio --default-kernel csharp") 
+            var startInfo = new ProcessStartInfo ("dotnet", "interactive  stdio --default-kernel csharp") 
             {
-                UseShellExecute = false,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
 
             DotNetInteractiveProcess = new Process {
-                EnableRaisingEvents = true,
                 StartInfo = startInfo
             };
 
             DotNetInteractiveProcess.ErrorDataReceived += (s, e) => logger.LogError(e.Data);
             DotNetInteractiveProcess.OutputDataReceived += (s, e) => logger.LogInformation(e.Data);
-            DotNetInteractiveProcess.Exited += (s, e) => logger.LogCritical(".NET Interactive Exited");
+            DotNetInteractiveProcess.Exited += (s, e) => logger.LogCritical(".NET Interactive Exited: ");
+            
             DotNetInteractiveProcess.Start ();
+
+            DotNetInteractiveProcess.BeginOutputReadLine();
+            DotNetInteractiveProcess.BeginErrorReadLine();
 
             return Task.CompletedTask;
         }
